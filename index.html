@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>300 năm bong bóng tài chính</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Be+Vietnam+Pro:wght@400;600&display=swap">
+<style>
+/* Một cột: tiêu đề, trình phát, danh sách chương (bấm để nhảy, tự phát chương kế) */
+:root{
+  --bg:#f5f0e6; --fg:#25211c; --muted:#6c6152; --accent:#b4471f; --ok:#2f7d4a; --warn:#a8741a; --card:#fffdf8; --line:#e2d6c2;
+  --display:"Fraunces",Georgia,serif; --body:"Be Vietnam Pro",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181614;--fg:#efe7da;--muted:#a99d8c;--accent:#ec7a4e;--ok:#5fbf80;--warn:#e0aa48;--card:#221f1b;--line:#3a342d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#181614;--fg:#efe7da;--muted:#a99d8c;--accent:#ec7a4e;--ok:#5fbf80;--warn:#e0aa48;--card:#221f1b;--line:#3a342d;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+main{max-width:880px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+h1{font-family:var(--display);font-size:clamp(28px,6vw,44px);line-height:1.1;margin:4px 0 0;text-wrap:balance}
+p{margin:0;color:var(--muted);max-width:65ch}
+video{width:100%;max-width:100%;aspect-ratio:16/9;border-radius:14px;background:#000;display:block;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.now{font-weight:600}
+ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+button.ch{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:2.2em 1fr auto;gap:10px;align-items:center;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:10px}
+button.ch:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.ch[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.so{font-variant-numeric:tabular-nums;font-weight:600;color:var(--accent)}
+.ten{min-width:0}
+.ten small{display:block;color:var(--muted);font-size:13px}
+.tt{font-size:12px;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap;border:1px solid currentColor}
+.tt.du{color:var(--ok)} .tt.mot{color:var(--warn)} .tt.chua{color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <div class="eyebrow">Minh dẫn chuyện · khoảng 12 phút · 7 chương</div>
+    <h1>300 năm bong bóng tài chính</h1>
+  </div>
+  <video id="vd" controls playsinline preload="metadata"></video>
+  <p><a href="video/day_du.mp4" style="color:var(--accent);font-weight:600">Xem bản gộp đủ 12 phút (một file)</a></p>
+  <p class="now" id="dang">Chương 1 · Mở đầu</p>
+  <p>Bản đang vẽ dở: chương có nhãn “đủ cử động” đã vẽ xong mọi khung hành động; chương “chưa cử động” tạm dùng ảnh đứng yên, sẽ được vẽ tiếp khi công cụ vẽ ảnh có lượt lại.</p>
+  <ol id="ds"></ol>
+</main>
+<script>
+const CHUONG=[
+ {ten:"Mở đầu",mo:"Bong bóng tài chính là gì",src:"video/chuong1.mp4",tt:"du",nhan:"Đủ cử động"},
+ {ten:"Hoa tulip, Hà Lan 1637",mo:"Cảnh 1–6 cử động, 7–12 đứng yên",src:"video/chuong2.mp4",tt:"mot",nhan:"Một nửa"},
+ {ten:"Công ty Mississippi, Paris 1719–1720",mo:"John Law và tiền giấy",src:"video/chuong3.mp4",tt:"chua",nhan:"Chưa cử động"},
+ {ten:"Biển Nam, London 1720",mo:"Cảnh 1–12 cử động, 13–14 gần như đứng yên",src:"video/chuong4.mp4",tt:"mot",nhan:"Gần đủ"},
+ {ten:"Cơn sốt đường sắt, Anh 1840s",mo:"George Hudson, “Vua đường sắt”",src:"video/chuong5.mp4",tt:"chua",nhan:"Chưa cử động"},
+ {ten:"Phố Wall 1929",mo:"Thứ Năm Đen và Đại Suy Thoái",src:"video/chuong6.mp4",tt:"chua",nhan:"Chưa cử động"},
+ {ten:"Năm dấu hiệu của bong bóng",mo:"Tổng kết",src:"video/chuong7.mp4",tt:"chua",nhan:"Chưa cử động"}];
+const vd=document.getElementById("vd"),ds=document.getElementById("ds"),dang=document.getElementById("dang");
+let hien=0;
+CHUONG.forEach((c,i)=>{
+  const li=document.createElement("li"),b=document.createElement("button");
+  b.className="ch";b.type="button";
+  b.innerHTML=`<span class="so">${String(i+1).padStart(2,"0")}</span><span class="ten"></span><span class="tt ${c.tt}"></span>`;
+  b.querySelector(".ten").textContent=c.ten;
+  const s=document.createElement("small");s.textContent=c.mo;b.querySelector(".ten").appendChild(s);
+  b.querySelector(".tt").textContent=c.nhan;
+  b.addEventListener("click",()=>chon(i,true));
+  li.appendChild(b);ds.appendChild(li);
+});
+function chon(i,phat){
+  hien=i;vd.src=CHUONG[i].src;dang.textContent=`Chương ${i+1} · ${CHUONG[i].ten}`;
+  ds.querySelectorAll("button.ch").forEach((b,k)=>b.setAttribute("aria-current",k===i?"true":"false"));
+  if(phat){vd.play().catch(()=>{});}
+}
+vd.addEventListener("ended",()=>{if(hien<CHUONG.length-1)chon(hien+1,true);});
+chon(0,false);
+</script>
+</body>
+</html>
