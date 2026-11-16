@@ -34,6 +34,10 @@ button.ch[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0
 </head>
 <body>
 <main>
+  <nav id="cac-video" style="margin:0 0 22px;padding:14px 16px;border:2px solid var(--accent);border-radius:14px">
+    <strong style="display:block;margin-bottom:8px">Các video (mới nhất trước) — bấm để xem</strong>
+    <ol id="ds-video" style="margin:0;padding-left:22px;line-height:1.9"></ol>
+  </nav>
   <div>
     <div class="eyebrow">Minh dẫn chuyện · 12 phút · 7 chương · có giọng đọc</div>
     <h1>300 năm bong bóng tài chính</h1>
@@ -100,6 +104,15 @@ function chon(i,phat){
 }
 vd.addEventListener("ended",()=>{if(hien<CHUONG.length-1)chon(hien+1,true);});
 chon(0,false);
+</script>
+<script>
+// tự liệt kê mọi tập (section id="ep-...") lên đầu trang, tập mới nhất trước
+(()=>{const ol=document.getElementById("ds-video");
+ [...document.querySelectorAll('section[id^="ep-"]')].reverse().forEach((sec,i)=>{
+  const li=document.createElement("li"),a=document.createElement("a");a.href="#"+sec.id;
+  a.textContent=sec.querySelector("h2").textContent+(i===0?" — MỚI":"");a.style.color="var(--accent)";a.style.fontWeight="600";
+  li.appendChild(a);ol.appendChild(li);});
+ if(location.hash){const t=document.querySelector(location.hash);if(t)setTimeout(()=>t.scrollIntoView(),50);}})();
 </script>
 </body>
 </html>
